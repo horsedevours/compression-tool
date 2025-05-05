@@ -5,14 +5,20 @@ type Character struct {
 	count int
 }
 
-type CharacterQueue []Character
+type CharacterTree struct {
+	val   Character
+	left  *CharacterTree
+	right *CharacterTree
+}
+
+type CharacterQueue []CharacterTree
 
 func (q CharacterQueue) Len() int {
 	return len(q)
 }
 
 func (q CharacterQueue) Less(i, j int) bool {
-	return q[i].count < q[j].count
+	return q[i].val.count < q[j].val.count
 }
 
 func (q CharacterQueue) Swap(i, j int) {
@@ -20,7 +26,7 @@ func (q CharacterQueue) Swap(i, j int) {
 }
 
 func (q *CharacterQueue) Push(x any) {
-	*q = append(*q, x.(Character))
+	*q = append(*q, x.(CharacterTree))
 }
 
 func (q *CharacterQueue) Pop() any {
@@ -29,4 +35,18 @@ func (q *CharacterQueue) Pop() any {
 	char := old[n-1]
 	*q = old[0 : n-1]
 	return char
+}
+
+func NewCharacterQueue(charCounts map[string]int) (CharacterQueue, error) {
+	charQ := CharacterQueue{}
+	for k, v := range charCounts {
+		tree := CharacterTree{
+			val: Character{
+				char:  k,
+				count: v,
+			},
+		}
+		charQ = append(charQ, tree)
+	}
+	return charQ, nil
 }

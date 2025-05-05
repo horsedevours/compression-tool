@@ -11,7 +11,14 @@ func main() {
 		os.Exit(1)
 	}
 
-	letterFreqs, err := countLetterFrequencies(os.Args[1])
+	file, err := os.Open(os.Args[1])
+	if err != nil {
+		fmt.Printf("Could not open file: %v", err)
+		os.Exit(1)
+	}
+	defer file.Close()
+
+	letterFreqs, err := countLetterFrequencies(file)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)

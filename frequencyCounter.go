@@ -3,16 +3,10 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"os"
+	"io"
 )
 
-func countLetterFrequencies(filePath string) (map[string]int, error) {
-	file, err := os.Open(os.Args[1])
-	if err != nil {
-		return map[string]int{}, fmt.Errorf("Could not open file: %w", err)
-	}
-	defer file.Close()
-
+func countLetterFrequencies(file io.Reader) (map[string]int, error) {
 	letterFreqs := map[string]int{}
 
 	scanner := bufio.NewScanner(file)
