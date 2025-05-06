@@ -1,5 +1,7 @@
 package main
 
+import "container/heap"
+
 type Character struct {
 	char  string
 	count int
@@ -49,4 +51,21 @@ func NewCharacterQueue(charCounts map[string]int) (CharacterQueue, error) {
 		charQ = append(charQ, tree)
 	}
 	return charQ, nil
+}
+
+func (q *CharacterQueue) BuildHuffmanTree() (CharacterTree, error) {
+	for q.Len() > 1 {
+		t1 := heap.Pop(q).(CharacterTree)
+		t2 := heap.Pop(q).(CharacterTree)
+
+		newTree := CharacterTree{
+			val: Character{
+				count: t1.val.count + t2.val.count,
+			},
+		}
+
+		heap.Push(q, newTree)
+	}
+
+	return heap.Pop(q).(CharacterTree), nil
 }

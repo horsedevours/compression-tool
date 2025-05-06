@@ -6,25 +6,6 @@ import (
 )
 
 func TestNewCharacterQueue(t *testing.T) {
-	// var chars CharacterQueue = []Character{
-	// 	{
-	// 		char:  "a",
-	// 		count: 5,
-	// 	}, {
-	// 		char:  "b",
-	// 		count: 4,
-	// 	}, {
-	// 		char:  "c",
-	// 		count: 3,
-	// 	}, {
-	// 		char:  "d",
-	// 		count: 2,
-	// 	}, {
-	// 		char:  "e",
-	// 		count: 1,
-	// 	},
-	// }
-
 	freqMap := map[string]int{
 		"a": 5,
 		"b": 4,
@@ -56,5 +37,47 @@ func TestNewCharacterQueue(t *testing.T) {
 		if tree.val.char != expectedOrder[i] {
 			t.Errorf("heap.Pop failed, unexpected order, next value expected %s but got %s", expectedOrder[i], tree.val.char)
 		}
+	}
+}
+
+func TestBuildCharacterTree(t *testing.T) {
+	testCases := []struct {
+		name     string
+		q        CharacterQueue
+		expected CharacterTree
+	}{
+		{
+			name: "two trees",
+			q: CharacterQueue{
+				{
+					val: Character{
+						char:  "a",
+						count: 3,
+					},
+				}, {
+					val: Character{
+						char:  "b",
+						count: 2,
+					},
+				},
+			},
+			expected: CharacterTree{
+				val: Character{
+					count: 5,
+				},
+			},
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			tree, err := tc.q.BuildHuffmanTree()
+			if err != nil {
+				t.Errorf("failed to build Huffman tree")
+			}
+			if tree.val.count != tc.expected.val.count {
+				t.Errorf("expected tree val to be %d, got %d instead", tc.expected.val.count, tree.val.count)
+			}
+		})
 	}
 }
