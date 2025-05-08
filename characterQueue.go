@@ -1,6 +1,9 @@
 package main
 
-import "container/heap"
+import (
+	"container/heap"
+	"fmt"
+)
 
 type Character struct {
 	char  string
@@ -8,9 +11,10 @@ type Character struct {
 }
 
 type CharacterTree struct {
-	val   Character
-	left  *CharacterTree
-	right *CharacterTree
+	isLeaf bool
+	val    Character
+	left   *CharacterTree
+	right  *CharacterTree
 }
 
 type CharacterQueue []CharacterTree
@@ -43,6 +47,7 @@ func NewCharacterQueue(charCounts map[string]int) (CharacterQueue, error) {
 	charQ := CharacterQueue{}
 	for k, v := range charCounts {
 		tree := CharacterTree{
+			isLeaf: true,
 			val: Character{
 				char:  k,
 				count: v,
@@ -59,13 +64,37 @@ func (q *CharacterQueue) BuildHuffmanTree() (CharacterTree, error) {
 		t2 := heap.Pop(q).(CharacterTree)
 
 		newTree := CharacterTree{
+			isLeaf: false,
 			val: Character{
 				count: t1.val.count + t2.val.count,
 			},
+			left:  &t1,
+			right: &t2,
 		}
 
 		heap.Push(q, newTree)
 	}
 
 	return heap.Pop(q).(CharacterTree), nil
+}
+
+func (cTree *CharacterTree) BuildCodeMap() map[string]string {
+	codeMap := map[string]string{}
+
+	getCodes(cTree, codeMap, "0")
+	return codeMap
+}
+
+func getCodes(cTree *CharacterTree, codeMap map[string]string, code string) {
+	if cTree.isLeaf {
+		fmt.Printf("Leaf val is %s and count is %d; code is %s\n", cTree.val.char, cTree.val.count, code)
+		codeMap[cTree.val.char] = code
+		return
+	}
+
+	fmt.Printf("Current tree is %d\n", cTree.val.count)
+	fmt.Printf("Tree val is %d, sum of children is %d\n", cTree.val.count, cTree.left.val.count+cTree.right.val.count)
+
+	getCodes(cTree.left, codeMap, code+"0")
+	getCodes(cTree.right, codeMap, code+"1")
 }

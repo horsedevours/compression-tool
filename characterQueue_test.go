@@ -2,6 +2,7 @@ package main
 
 import (
 	"container/heap"
+	"fmt"
 	"testing"
 )
 
@@ -48,22 +49,18 @@ func TestBuildCharacterTree(t *testing.T) {
 	}{
 		{
 			name: "two trees",
-			q: CharacterQueue{
-				{
-					val: Character{
-						char:  "a",
-						count: 3,
-					},
-				}, {
-					val: Character{
-						char:  "b",
-						count: 2,
-					},
-				},
-			},
+			q:    simpleCharacterQueue(),
 			expected: CharacterTree{
 				val: Character{
 					count: 5,
+				},
+			},
+		}, {
+			name: "eight trees",
+			q:    biggerCharacterQueue(),
+			expected: CharacterTree{
+				val: Character{
+					count: 306,
 				},
 			},
 		},
@@ -78,6 +75,47 @@ func TestBuildCharacterTree(t *testing.T) {
 			if tree.val.count != tc.expected.val.count {
 				t.Errorf("expected tree val to be %d, got %d instead", tc.expected.val.count, tree.val.count)
 			}
+			verifyCodes(tree, "", t)
 		})
 	}
+}
+
+func simpleCharacterQueue() CharacterQueue {
+	chars := map[string]int{
+		"a": 3,
+		"b": 2,
+	}
+	q, _ := NewCharacterQueue(chars)
+	heap.Init(&q)
+	return q
+}
+
+func biggerCharacterQueue() CharacterQueue {
+	chars := map[string]int{
+		"C": 32,
+		"D": 42,
+		"E": 120,
+		"K": 7,
+		"L": 42,
+		"M": 24,
+		"U": 37,
+		"Z": 2,
+	}
+	q, _ := NewCharacterQueue(chars)
+	heap.Init(&q)
+	return q
+}
+
+func verifyCodes(tree CharacterTree, code string, t *testing.T) {
+	t.Helper()
+	if tree.isLeaf {
+		fmt.Printf("Leaf val is %s and count is %d; code is %s\n", tree.val.char, tree.val.count, code)
+		return
+	}
+
+	fmt.Printf("Current tree is %d\n", tree.val.count)
+	fmt.Printf("Tree val is %d, sum of children is %d\n", tree.val.count, tree.left.val.count+tree.right.val.count)
+
+	verifyCodes(*tree.left, code+"0", t)
+	verifyCodes(*tree.right, code+"1", t)
 }
