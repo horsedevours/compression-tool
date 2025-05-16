@@ -1,11 +1,11 @@
-package main
+package huffman
 
 import (
 	"bufio"
 	"io"
 )
 
-func countLetterFrequencies(file io.Reader) map[byte]int {
+func CountLetterFrequencies(file io.Reader) map[byte]int {
 	letterFreqs := map[byte]int{}
 
 	reader := bufio.NewReader(file)

@@ -1,4 +1,4 @@
-package main
+package huffman
 
 import (
 	"strings"
@@ -27,7 +27,7 @@ func TestCountLetterFrequencies(t *testing.T) {
 
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
-			freqs := countLetterFrequencies(strings.NewReader(tc.text))
+			freqs := CountLetterFrequencies(strings.NewReader(tc.text))
 
 			assertFreqs(freqs, tc.expectedChars, tc.expectedCounts, t)
 		})
