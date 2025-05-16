@@ -3,6 +3,8 @@
 
 Just a personal project to back-fill some knowledge and experience I've missed out on as a self-taught developer.
 
+`go build`
+
 `./compression-tool <compress | decompress> <inputFile> <outputFile>`
 
 Learned plenty about
